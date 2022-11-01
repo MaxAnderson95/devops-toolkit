@@ -26,11 +26,14 @@ COPY tanzu-cli-bundle-linux-amd64.tar.gz /tmp/tanzu-cli-bundle-linux-amd64.tar.g
 WORKDIR /tmp
 RUN tar -xf tanzu-cli-bundle-linux-amd64.tar.gz
 RUN rm tanzu-cli-bundle-linux-amd64.tar.gz
-RUN mv cli/core/v0.25.0/tanzu-core-linux_amd64 /usr/local/bin/tanzu
-RUN tanzu init
-RUN tanzu plugin sync
-RUN rm -rf cli
+RUN mv /tmp/cli/core/v0.25.0/tanzu-core-linux_amd64 /usr/local/bin/tanzu
+WORKDIR /tmp/cli
+RUN tar -xf /tmp/cli/tanzu-framework-plugins-context-linux-amd64.tar.gz
+RUN tar -xf /tmp/cli/tanzu-framework-plugins-standalone-linux-amd64.tar.gz
+RUN tanzu plugin install --local context-plugins/ all
+RUN tanzu plugin install --local standalone-plugins/ all
 WORKDIR /
+RUN rm -rf /tmp/cli
 
 # Install python/pip
 ENV PYTHONUNBUFFERED=1
