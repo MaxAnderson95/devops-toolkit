@@ -1,55 +1,41 @@
-FROM alpine:latest
+FROM alpine:latest AS builder
+WORKDIR /build
 
 #Install curl
 RUN apk add --no-cache curl
 
-#Install openssl
-RUN apk add --no-cache openssl
-
-#Install nano
-RUN apk add --no-cache nano
-
-#Install nmap
-RUN apk add --no-cache nmap
-
-#Install ncat
-RUN apk add --no-cache nmap-ncat
-
-#Install kubectl
+#Download kubectl
 RUN curl -LO https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/amd64/kubectl
-RUN chmod +x ./kubectl
-RUN mv ./kubectl /usr/local/bin/kubectl
-RUN export KUBE_EDITOR="nano"
 
-#Install Tanzu CLI
-COPY tanzu-cli-bundle-linux-amd64.tar.gz /tmp/tanzu-cli-bundle-linux-amd64.tar.gz
-WORKDIR /tmp
+#Download and unpack Tanzu CLI
+COPY tanzu-cli-bundle-linux-amd64.tar.gz /build/tanzu-cli-bundle-linux-amd64.tar.gz
 RUN tar -xf tanzu-cli-bundle-linux-amd64.tar.gz
 RUN rm tanzu-cli-bundle-linux-amd64.tar.gz
-RUN mv /tmp/cli/core/v0.25.0/tanzu-core-linux_amd64 /usr/local/bin/tanzu
-WORKDIR /tmp/cli
-RUN tar -xf /tmp/cli/tanzu-framework-plugins-context-linux-amd64.tar.gz
-RUN tar -xf /tmp/cli/tanzu-framework-plugins-standalone-linux-amd64.tar.gz
-RUN tanzu plugin install --local context-plugins/ all
-RUN tanzu plugin install --local standalone-plugins/ all
+RUN tar -xf ./cli/tanzu-framework-plugins-context-linux-amd64.tar.gz
+RUN tar -xf ./cli/tanzu-framework-plugins-standalone-linux-amd64.tar.gz
+
+#-----------------------------------------------#
+
+FROM alpine:latest
+
+#Install various packages 
+RUN apk add --no-cache curl openssl nano nmap nmap-ncat ca-certificates less ncurses-terminfo-base krb5-libs libgcc libintl libssl1.1 libstdc++ tzdata userspace-rcu zlib icu-libs lttng-ust
+
+#Install kubectl
+COPY --from=builder /build/kubectl /usr/local/bin/kubectl
+RUN chmod +x /usr/local/bin/kubectl && export KUBE_EDITOR="nano"
+
+#Install Tanzu CLI
+COPY --from=builder /build/cli/core/v0.25.0/tanzu-core-linux_amd64 /usr/local/bin/tanzu
+COPY --from=builder /build/context-plugins /tmp/context-plugins
+COPY --from=builder /build/standalone-plugins /tmp/standalone-plugins
+WORKDIR /tmp
+RUN tanzu plugin install --local context-plugins/ all && tanzu plugin install --local standalone-plugins/ all && rm -rf /tmp/*
 WORKDIR /
-RUN rm -rf /tmp/cli
 
 # Install python/pip
 ENV PYTHONUNBUFFERED=1
-RUN apk add --update --no-cache python3 && ln -sf python3 /usr/bin/python
-RUN python3 -m ensurepip
-RUN pip3 install --no-cache --upgrade pip setuptools
+RUN apk add --update --no-cache python3 && ln -sf python3 /usr/bin/python && python3 -m ensurepip && pip3 install --no-cache --upgrade pip setuptools
 
 #Install httpie
 RUN python -m pip install httpie
-
-#Install PowerShell core
-RUN apk add --no-cache ca-certificates less ncurses-terminfo-base krb5-libs libgcc libintl libssl1.1 libstdc++ tzdata userspace-rcu zlib icu-libs
-RUN apk -X https://dl-cdn.alpinelinux.org/alpine/edge/main add --no-cache lttng-ust
-RUN curl -L https://github.com/PowerShell/PowerShell/releases/download/v7.2.7/powershell-7.2.7-linux-alpine-x64.tar.gz -o /tmp/powershell.tar.gz
-RUN mkdir -p /opt/microsoft/powershell/7
-RUN tar zxf /tmp/powershell.tar.gz -C /opt/microsoft/powershell/7
-RUN chmod +x /opt/microsoft/powershell/7/pwsh
-RUN ln -s /opt/microsoft/powershell/7/pwsh /usr/bin/pwsh
-RUN rm /tmp/powershell.tar.gz
