@@ -2,8 +2,9 @@ name: ci
 
 on:
   push:
-    paths:
-      - 'app/**'
+    paths-ignore:
+      - 'README.md'
+      - '.github/**'
     branches:
       - 'main'
 
