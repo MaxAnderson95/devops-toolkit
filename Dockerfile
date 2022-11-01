@@ -30,6 +30,7 @@ RUN mv cli/core/v0.25.0/tanzu-core-linux_amd64 /usr/local/bin/tanzu
 RUN tanzu init
 RUN tanzu plugin sync
 RUN rm -rf cli
+WORKDIR /
 
 # Install python/pip
 ENV PYTHONUNBUFFERED=1
@@ -48,3 +49,4 @@ RUN mkdir -p /opt/microsoft/powershell/7
 RUN tar zxf /tmp/powershell.tar.gz -C /opt/microsoft/powershell/7
 RUN chmod +x /opt/microsoft/powershell/7/pwsh
 RUN ln -s /opt/microsoft/powershell/7/pwsh /usr/bin/pwsh
+RUN rm /tmp/powershell.tar.gz
