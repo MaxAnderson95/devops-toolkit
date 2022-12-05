@@ -1,5 +1,7 @@
 alias k=kubectl
 
+PS1='%m %3d$ '
+
 ### ctrl+arrows
 bindkey "\e[1;5C" forward-word
 bindkey "\e[1;5D" backward-word

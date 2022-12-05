@@ -29,6 +29,12 @@ RUN wget https://github.com/bitnami-labs/sealed-secrets/releases/download/v0.19.
 RUN tar -xvzf kubeseal-0.19.2-linux-amd64.tar.gz kubeseal
 RUN chmod 0755 kubeseal && mv kubeseal /usr/local/bin/kubeseal
 
+#Instal Helm
+RUN curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
+RUN chmod 700 get_helm.sh
+RUN ./get_helm.sh
+RUN rm get_helm.sh
+
 #Copy in .zshrc
 COPY .zshrc /root
 
