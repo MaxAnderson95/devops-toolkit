@@ -24,6 +24,11 @@ RUN python -m pip install httpie
 RUN curl -sSL -o argocd-linux-amd64 https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64
 RUN chmod 0555 argocd-linux-amd64 && mv argocd-linux-amd64 /usr/local/bin/argocd
 
+#Install Kubeseal
+RUN wget https://github.com/bitnami-labs/sealed-secrets/releases/download/v0.19.2/kubeseal-0.19.2-linux-amd64.tar.gz
+RUN tar -xvzf kubeseal-0.19.2-linux-amd64.tar.gz kubeseal
+RUN chmod 0755 kubeseal && mv kubeseal /usr/local/bin/kubeseal
+
 #Copy in .zshrc
 COPY .zshrc /root
 
