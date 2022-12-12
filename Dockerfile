@@ -1,7 +1,7 @@
 FROM alpine:latest
 
 #Install various packages 
-RUN apk add --no-cache zsh bash git curl openssl nano neovim nmap nmap-ncat ca-certificates less ncurses-terminfo-base krb5-libs libgcc libintl libssl1.1 libstdc++ tzdata userspace-rcu zlib icu-libs lttng-ust fzf
+RUN apk add --no-cache zsh bash git curl openssl nano neovim nmap nmap-ncat ca-certificates less ncurses-terminfo-base krb5-libs libgcc libintl libssl1.1 libstdc++ tzdata userspace-rcu zlib icu-libs lttng-ust fzf docker
 
 #Install kubectl
 RUN curl -LO https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/amd64/kubectl
@@ -34,6 +34,12 @@ RUN curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/s
 RUN chmod 700 get_helm.sh
 RUN ./get_helm.sh
 RUN rm get_helm.sh
+
+#Install Dive
+RUN curl -fsSL -o dive.tar.gz https://github.com/wagoodman/dive/releases/download/v0.10.0/dive_0.10.0_linux_amd64.tar.gz
+RUN tar -xvzf dive.tar.gz dive
+RUN rm dive.tar.gz
+RUN chmod 0555 dive && mv dive /usr/local/bin/dive
 
 #Copy in .zshrc
 COPY .zshrc /root
