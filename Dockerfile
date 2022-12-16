@@ -46,6 +46,11 @@ RUN curl -fsSL -o terraform.zip https://releases.hashicorp.com/terraform/1.3.6/t
 RUN unzip terraform.zip
 RUN chmod +x terraform && mv terraform /usr/local/bin/terraform
 
+#Install DigitalOcean CLI
+RUN wget https://github.com/digitalocean/doctl/releases/download/v1.86.0/doctl-1.86.0-linux-amd64.tar.gz
+RUN tar xf doctl-1.86.0-linux-amd64.tar.gz
+RUN mv doctl /usr/local/bin
+
 #Copy in .zshrc
 COPY .zshrc /root
 
