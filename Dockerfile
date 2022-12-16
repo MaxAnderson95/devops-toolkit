@@ -41,6 +41,11 @@ RUN tar -xvzf dive.tar.gz dive
 RUN rm dive.tar.gz
 RUN chmod 0555 dive && mv dive /usr/local/bin/dive
 
+#Install Terraform
+RUN curl -fsSL -o terraform.zip https://releases.hashicorp.com/terraform/1.3.6/terraform_1.3.6_linux_amd64.zip
+RUN unzip terraform.zip
+RUN chmod +x terraform && mv terraform /usr/local/bin/terraform
+
 #Copy in .zshrc
 COPY .zshrc /root
 
