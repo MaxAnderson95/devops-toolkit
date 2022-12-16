@@ -1,4 +1,5 @@
 alias k=kubectl
+alias tf=terraform
 
 PS1='%m %3d$ '
 
