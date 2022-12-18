@@ -13,9 +13,9 @@ RUN git clone https://github.com/ahmetb/kubectx /opt/kubectx
 RUN ln -s /opt/kubectx/kubectx /usr/local/bin/kubectx
 RUN ln -s /opt/kubectx/kubens /usr/local/bin/kubens
 
-# Install python/pip
+# Install python/pip (v3.11 from edge repository)
 ENV PYTHONUNBUFFERED=1
-RUN apk add --update --no-cache python3 && ln -sf python3 /usr/bin/python && python3 -m ensurepip && pip3 install --no-cache --upgrade pip setuptools
+RUN apk add --update --no-cache python3 --repository=http://dl-cdn.alpinelinux.org/alpine/edge/main && ln -sf python3 /usr/bin/python && python3 -m ensurepip && pip3 install --no-cache --upgrade pip setuptools
 
 #Install httpie
 RUN python -m pip install httpie
