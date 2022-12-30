@@ -1,7 +1,7 @@
 FROM alpine:latest
 
 #Install various packages 
-RUN apk add --no-cache zsh bash git curl openssl nano neovim nmap nmap-ncat ca-certificates less jq ncurses-terminfo-base krb5-libs libgcc libintl libssl1.1 libstdc++ tzdata userspace-rcu zlib icu-libs lttng-ust fzf docker
+RUN apk add --no-cache zsh bash git curl openssl nano neovim nmap nmap-ncat ca-certificates less jq ncurses-terminfo-base krb5-libs libgcc libintl libssl1.1 libstdc++ tzdata userspace-rcu zlib icu-libs lttng-ust fzf docker step
 
 #Install kubectl
 RUN curl -LO https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/amd64/kubectl
