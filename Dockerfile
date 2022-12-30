@@ -35,6 +35,10 @@ RUN chmod 700 get_helm.sh
 RUN ./get_helm.sh
 RUN rm get_helm.sh
 
+#Install Linkerd CLI
+RUN curl -fsSL -o linkerd https://github.com/linkerd/linkerd2/releases/download/stable-2.12.3/linkerd2-cli-stable-2.12.3-linux-amd64
+RUN chmod +x linkerd && mv linkerd /usr/local/bin/linkerd
+
 #Copy in .zshrc
 COPY .zshrc /root
 
