@@ -1,4 +1,5 @@
 alias k=kubectl
+alias tf=terraform
 
 autoload -Uz compinit
 compinit
