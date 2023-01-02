@@ -55,6 +55,11 @@ RUN wget https://github.com/digitalocean/doctl/releases/download/v1.86.0/doctl-1
 RUN tar xf doctl-1.86.0-linux-amd64.tar.gz
 RUN mv doctl /usr/local/bin
 
+#Install KubeCM
+RUN wget https://github.com/sunny0826/kubecm/releases/download/v0.21.0/kubecm_v0.21.0_Linux_x86_64.tar.gz
+RUN tar xf kubecm_v0.21.0_Linux_x86_64.tar.gz
+RUN mv kubecm /usr/local/bin
+
 #Copy in .zshrc
 COPY .zshrc /root
 
